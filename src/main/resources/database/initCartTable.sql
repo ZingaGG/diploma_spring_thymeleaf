@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS carts (
+    id SERIAL PRIMARY KEY,
+    total_cost NUMERIC
+);

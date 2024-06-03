@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Cart</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<div class="container">
+  <h1>Your Cart</h1>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Price</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${cart.cartItems}">
+      <td th:text="${item.productName}"></td>
+      <td>
+        <form th:action="@{/cart/decrementQuantity}" method="post" style="display: inline;">
+          <input type="hidden" name="productName" th:value="${item.productName}" />
+          <button type="submit" class="btn btn-outline-secondary">-</button>
+        </form>
+        <span th:text="${item.quantity}"></span>
+        <form th:action="@{/cart/incrementQuantity}" method="post" style="display: inline;">
+          <input type="hidden" name="productName" th:value="${item.productName}" />
+          <button type="submit" class="btn btn-outline-secondary">+</button>
+        </form>
+      </td>
+      <td th:text="${item.price}"></td>
+      <td>
+        <form th:action="@{/cart/remove}" method="post" style="display: inline;">
+          <input type="hidden" name="itemId" th:value="${item.id}" />
+          <button type="submit" class="btn btn-danger">Remove</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <form th:action="@{/profile/purchase}" method="post">
+    <input type="hidden" name="totalCost" th:value="${cart.totalCost}" />
+    <button type="submit" class="btn btn-primary">Purchase</button>
+  </form>
+  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+  <form th:action="@{/cart/clear}" method="post">
+    <button type="submit" class="btn btn-warning">Clear Cart</button>
+  </form>
+  <a href="/home" class="btn btn-secondary">Continue Shopping</a>
+</div>
+</body>
+</html>

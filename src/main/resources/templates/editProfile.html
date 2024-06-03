@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Profile</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<div class="container">
+  <h1>Edit Profile</h1>
+  <form th:action="@{/home/profile/update}" method="post">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" class="form-control" th:value="${user.username}" readonly />
+    </div>
+    <div class="form-group">
+      <label for="email">Current Email:</label>
+      <input type="text" id="email" name="currentEmail" class="form-control" th:value="${user.email}" readonly />
+      <label for="newEmail">New Email:</label>
+      <input type="email" id="newEmail" name="newEmail" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="firstName">Current First Name:</label>
+      <input type="text" id="firstName" name="currentFirstName" class="form-control" th:value="${user.firstName}" readonly />
+      <label for="newFirstName">New First Name:</label>
+      <input type="text" id="newFirstName" name="newFirstName" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="lastName">Current Last Name:</label>
+      <input type="text" id="lastName" name="currentLastName" class="form-control" th:value="${user.lastName}" readonly />
+      <label for="newLastName">New Last Name:</label>
+      <input type="text" id="newLastName" name="newLastName" class="form-control" />
+    </div>
+    <a th:href="@{/home/profile}">
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    </a>
+  </form>
+</div>
+</body>
+</html>

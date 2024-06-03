@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Product Details</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    .product-card {
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .product-details {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<div class="container">
+  <h1 class="my-4">Product Details</h1>
+  <div class="product-card" th:if="${product != null}">
+    <h2 th:text="${product.name}">Product Name</h2>
+    <div class="product-details">
+      <p><strong>Price:</strong> <span th:text="${product.price}">$0.00</span></p>
+      <p><strong>Quantity:</strong> <span th:text="${product.quantity}">0</span></p>
+      <p><strong>Product Type:</strong> <span th:text="${product.productType}">GAME</span></p>
+    </div>
+    <form method="post" th:action="@{/cart/add}">
+      <input type="hidden" name="quantity" value="1" />
+      <input type="hidden" name="productName" th:value="${product.name}"/>
+      <button type="submit" class="btn btn-primary" th:disabled="${product.quantity == 0}">Add to cart</button>
+    </form>
+  </div>
+  <div th:if="${product.quantity == 0}">
+    <p style="color: red">No available game keys!</p>
+  </div>
+</div>
+</body>
+</html>

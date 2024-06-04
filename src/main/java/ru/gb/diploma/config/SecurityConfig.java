@@ -33,13 +33,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // Основной Фильтр
     @Bean
     SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("home", "/auth/register", "/test/**", "/product/**").permitAll()
-                        .anyRequest().authenticated() // TODO: переставить на authenticated
+                        .anyRequest().authenticated()
                 )
                 .formLogin((login) -> login
                         .permitAll()

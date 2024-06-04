@@ -17,11 +17,6 @@
           <a class="nav-link" th:href="@{/home/profile}">Profile</a>
         </li>
       </ul>
-<!--        <li class="nav-item">-->
-<!--          <form th:action="@{/logout}" method="post">-->
-<!--            -->
-<!--          </form>-->
-<!--        </li>-->
       <ul class="nav navbar-nav navbar-right">
         <li th:if="${#authorization.expression('!isAuthenticated()')}">
           <a href="/auth/login" th:href="@{/auth/login}">
@@ -29,7 +24,6 @@
           </a>
         </li>
         <li th:if="${#authorization.expression('isAuthenticated()')}">
-<!--          <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout-->
           <form style="display: inline;" id="logout-form" method="post" th:action="@{/logout}">
             <button type="submit" class="btn btn-link nav-link" style="padding: 0; border: none; background: none;">Logout</button>
           </form>

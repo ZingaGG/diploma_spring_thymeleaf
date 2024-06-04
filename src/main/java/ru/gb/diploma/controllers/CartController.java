@@ -78,6 +78,8 @@ public class CartController {
         return "redirect:/cart";
     }
 
+    // Обрабатывает запрос на увелечение продукта в корзине на 1
+
     @PostMapping("/incrementQuantity")
     public String incrementQuantity(@AuthenticationPrincipal User user,
                                     @RequestParam String productName) {
@@ -88,6 +90,8 @@ public class CartController {
         }
         return "redirect:/cart";
     }
+
+    // Обрабатывает запрос на уменьшение продукта в корзине на 1
 
     @PostMapping("/decrementQuantity")
     public String decrementQuantity(@AuthenticationPrincipal User user,

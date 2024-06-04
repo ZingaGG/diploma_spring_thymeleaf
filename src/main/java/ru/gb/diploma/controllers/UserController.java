@@ -1,7 +1,6 @@
 package ru.gb.diploma.controllers;
 
 import lombok.AllArgsConstructor;
-import org.springframework.boot.Banner;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.gb.diploma.model.DTO.ProductDTO;
+import ru.gb.diploma.model.DTO.product.ProductDTO;
 import ru.gb.diploma.model.User;
 import ru.gb.diploma.model.utils.mappers.ProductMapper;
 import ru.gb.diploma.services.ProductService;
@@ -60,11 +59,15 @@ public class UserController {
         return "redirect:/home/profile";
     }
 
+    // Обработчик добавление баланса пользователю
+
     @PostMapping("/profile/addFunds")
     public String addFunds(@AuthenticationPrincipal User user, @RequestParam BigDecimal amount) {
         userService.addFunds(user, amount);
         return "redirect:/home/profile";
     }
+
+    // Обработка покупки
 
     @PostMapping("/profile/purchase")
     public String purchase(@AuthenticationPrincipal User user,

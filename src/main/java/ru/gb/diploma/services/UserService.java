@@ -65,6 +65,14 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    /**
+     * Метод для изменения данных пользователя, не требует изменения всех полей
+     * @param user
+     * @param newEmail
+     * @param newFirstName
+     * @param newLastName
+     */
+
     @Transactional
     public void updateUserProfile(User user, String newEmail, String newFirstName, String newLastName) {
         if (newEmail != null && !newEmail.isEmpty()) {
@@ -79,12 +87,23 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    /**
+     * Добавляет средства на счет пользователя
+     * @param user
+     * @param amount
+     */
     @Transactional
     public void addFunds(User user, BigDecimal amount) {
         user.setBalance(user.getBalance().add(amount));
         userRepository.save(user);
     }
 
+    /**
+     * Метод обновления баланса после покупки
+     * @param user
+     * @param totalCost
+     * @return
+     */
     @Transactional
     public boolean purchase(User user, BigDecimal totalCost) {
         if (user.getBalance().compareTo(totalCost) >= 0) {

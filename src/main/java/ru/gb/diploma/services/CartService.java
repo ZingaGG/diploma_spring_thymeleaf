@@ -25,11 +25,22 @@ public class CartService {
 
     private final UserService userService;
 
-
+    /**
+     * Достает корзину из репозитория по пользователю
+     * @param user
+     * @return
+     * @throws CartNotFoundException
+     */
     public Cart getCart(User user) throws CartNotFoundException {
         return cartRepository.findByUser(user).orElseThrow(
                 () -> new CartNotFoundException("Cart no found"));
     }
+
+    /**
+     * Определяет корзину пользователю корзину
+     * @param user
+     * @return
+     */
     @Transactional
     public Cart createCart(User user){
         Cart newCart = new Cart();
@@ -38,6 +49,14 @@ public class CartService {
         return cartRepository.save(newCart);
     }
 
+    /**
+     * Метод добавления продукта в корзину
+     * @param user
+     * @param productName
+     * @param quantity
+     * @throws CartNotFoundException
+     * @throws ProductNotFoundException
+     */
     @Transactional
     public void addItemToCart(User user, String productName, int quantity) throws CartNotFoundException, ProductNotFoundException {
         Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new CartNotFoundException("Cart not found"));
@@ -49,7 +68,8 @@ public class CartService {
 
         if (existingItemOpt.isPresent()) {
             CartItem existingItem = existingItemOpt.get();
-
+            // Проверка на случай если кол-во предметов в корзине привышает допустимое количество
+            // Если такое произошло - ставит в поле quantity макс. кол-во продукта в наличии
             if(existingItem.getProduct().getQuantity() > existingItem.getQuantity() + quantity){
                 existingItem.setQuantity(existingItem.getQuantity() + quantity);
                 cartItemService.saveCartItem(existingItem);
@@ -68,6 +88,13 @@ public class CartService {
         }
     }
 
+    /**
+     * Метод удаления кокретного продукта из корзины
+     * @param user
+     * @param itemId
+     * @throws CartNotFoundException
+     */
+
     @Transactional
     public void removeItemFromCart(User user, Long itemId) throws CartNotFoundException {
         Cart cart = cartRepository.findByUser(user)
@@ -84,6 +111,11 @@ public class CartService {
         }
     }
 
+    /**
+     * Метод очищенеия всех продуктов из корзины
+     * @param user
+     * @throws CartNotFoundException
+     */
     @Transactional
     public void clearCart(User user) throws CartNotFoundException {
         Cart cart = cartRepository.findByUser(user)
@@ -94,6 +126,13 @@ public class CartService {
         }
     }
 
+    /**
+     * Метод для работы счетчика кол-ва продукта внутри корзины (инкрементирование)
+     * @param user
+     * @param productName
+     * @throws CartNotFoundException
+     * @throws ProductNotFoundException
+     */
     @Transactional
     public void incrementQuantity(User user, String productName) throws CartNotFoundException, ProductNotFoundException {
         Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new CartNotFoundException("Cart not found"));
@@ -112,6 +151,13 @@ public class CartService {
         }
     }
 
+    /**
+     * Метод для работы счетчика кол-ва продукта внутри корзины (декрментирование)
+     * @param user
+     * @param productName
+     * @throws CartNotFoundException
+     * @throws ProductNotFoundException
+     */
     @Transactional
     public void decrementQuantity(User user, String productName) throws CartNotFoundException, ProductNotFoundException {
         Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new CartNotFoundException("Cart not found"));

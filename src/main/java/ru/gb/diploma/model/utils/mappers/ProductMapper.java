@@ -1,7 +1,7 @@
 package ru.gb.diploma.model.utils.mappers;
 
 import org.mapstruct.Mapper;
-import ru.gb.diploma.model.DTO.ProductDTO;
+import ru.gb.diploma.model.DTO.product.ProductDTO;
 import ru.gb.diploma.model.Product;
 
 @Mapper(componentModel = "spring")

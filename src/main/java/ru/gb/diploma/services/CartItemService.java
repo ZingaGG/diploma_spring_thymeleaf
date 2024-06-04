@@ -12,10 +12,14 @@ public class CartItemService {
 
     private final iCartItemRepository repository;
 
+    // Сохранить CartItem
+
     @Transactional
     public CartItem saveCartItem(CartItem cartItem){
         return repository.save(cartItem);
     }
+
+    // Удалить CartItem
 
     @Transactional
     public void deleteCartItem(CartItem cartItem){

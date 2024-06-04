@@ -3,6 +3,8 @@ package ru.gb.diploma.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+// Адаптер между продуктом и корзиной
+
 @Entity
 @Data
 @Table(name = "cart_items")

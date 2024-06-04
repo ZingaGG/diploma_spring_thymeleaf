@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+// Ентити корзины
+
 @Entity
 @Data
 @Table(name = "carts")

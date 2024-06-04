@@ -1,4 +1,4 @@
-package ru.gb.diploma.model.DTO;
+package ru.gb.diploma.model.DTO.product;
 
 import lombok.Data;
 import ru.gb.diploma.model.utils.ProductType;

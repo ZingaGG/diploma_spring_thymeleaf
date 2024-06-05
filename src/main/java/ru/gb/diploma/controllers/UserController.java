@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.gb.diploma.model.DTO.product.ProductDTO;
 import ru.gb.diploma.model.User;
+import ru.gb.diploma.model.utils.exceptions.AppBalanceException;
 import ru.gb.diploma.model.utils.mappers.ProductMapper;
 import ru.gb.diploma.services.ProductService;
 import ru.gb.diploma.services.UserService;
@@ -73,13 +74,23 @@ public class UserController {
     public String purchase(@AuthenticationPrincipal User user,
                            @RequestParam BigDecimal totalCost,
                            Model model) {
-        boolean success = userService.purchase(user, totalCost);
+        boolean success = false;
+        try {
+            success = userService.purchase(user, totalCost);
+        } catch (AppBalanceException e) {
+            throw new RuntimeException(e);
+        }
         if (success) {
-            return "redirect:/confirmation";
+            return "redirect:/home/thankPage";
         } else {
             model.addAttribute("error", "Insufficient funds");
             return "cart";
         }
+    }
+
+    @GetMapping("/thankPage")
+    public String thankPage(){
+        return "thankPage";
     }
 
 }

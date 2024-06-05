@@ -2,12 +2,14 @@ package ru.gb.diploma.services;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.diploma.model.User;
+import ru.gb.diploma.model.utils.exceptions.AppBalanceException;
 import ru.gb.diploma.repositories.iUserRepository;
 
 import java.math.BigDecimal;
@@ -15,10 +17,11 @@ import java.util.List;
 
 @Service
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final iUserRepository userRepository;
+    private final AppBalanceService appBalanceService;
 
     /**
      * Saves the user into Database
@@ -105,9 +108,10 @@ public class UserService implements UserDetailsService {
      * @return
      */
     @Transactional
-    public boolean purchase(User user, BigDecimal totalCost) {
+    public boolean purchase(User user, BigDecimal totalCost) throws AppBalanceException {
         if (user.getBalance().compareTo(totalCost) >= 0) {
             user.setBalance(user.getBalance().subtract(totalCost));
+            appBalanceService.updateAppBalance(totalCost);
             userRepository.save(user);
             return true;
         } else {

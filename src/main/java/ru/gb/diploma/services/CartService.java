@@ -161,7 +161,6 @@ public class CartService {
     @Transactional
     public void decrementQuantity(User user, String productName) throws CartNotFoundException, ProductNotFoundException {
         Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new CartNotFoundException("Cart not found"));
-        Product product = productService.getProductByName(productName);
 
         Optional<CartItem> cartItemOpt = cart.getCartItems().stream()
                 .filter(item -> item.getProduct().getName().equals(productName))

@@ -41,7 +41,7 @@
     </tr>
     </tbody>
   </table>
-  <form th:action="@{/profile/purchase}" method="post">
+  <form th:action="@{/home/profile/purchase}" method="post">
     <input type="hidden" name="totalCost" th:value="${cart.totalCost}" />
     <button type="submit" class="btn btn-primary">Purchase</button>
   </form>

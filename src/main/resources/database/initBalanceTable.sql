@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS app_balance
+(
+    id SERIAL PRIMARY KEY NOT NULL,
+    balance NUMERIC
+);

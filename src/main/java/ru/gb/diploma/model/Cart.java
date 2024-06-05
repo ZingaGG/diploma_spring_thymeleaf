@@ -2,6 +2,7 @@ package ru.gb.diploma.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
@@ -27,11 +28,13 @@ public class Cart {
     private BigDecimal totalCost = BigDecimal.valueOf(0);
 
     public void addItem(CartItem item){
-        cartItems.add(item);
+        BigDecimal price = BigDecimal.valueOf(item.getProduct().getPrice()).multiply(BigDecimal.valueOf(item.getQuantity()));
+        this.totalCost = price;
+        this.cartItems.add(item);
     }
 
     public void removeItem(CartItem item) {
-        cartItems.remove(item);
+        this.cartItems.remove(item);
         item.setCart(null);
     }
 

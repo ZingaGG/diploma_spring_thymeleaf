@@ -2,14 +2,13 @@ package ru.gb.diploma.services;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.diploma.model.User;
-import ru.gb.diploma.model.utils.exceptions.AppBalanceException;
+import ru.gb.diploma.model.utils.Role;
 import ru.gb.diploma.repositories.iUserRepository;
 
 import java.math.BigDecimal;
@@ -17,11 +16,10 @@ import java.util.List;
 
 @Service
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final iUserRepository userRepository;
-    private final AppBalanceService appBalanceService;
 
     /**
      * Saves the user into Database
@@ -29,6 +27,16 @@ public class UserService implements UserDetailsService {
      * @return user
      */
     public User saveUser(User user){
+        return userRepository.save(user);
+    }
+
+    /**
+     * Register user into Database
+     * @param user
+     * @return user
+     */
+    public User registerUser(User user){
+        user.setRole(Role.USER);
         return userRepository.save(user);
     }
 
@@ -56,12 +64,6 @@ public class UserService implements UserDetailsService {
      * @param <<code>String</code> email
      * @return <code>User</code> user
      */
-    public User getUserByEmail(String email){
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-    // Оверрайд метода из UserDetailsService для корректной работы авторизации
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
@@ -108,10 +110,9 @@ public class UserService implements UserDetailsService {
      * @return
      */
     @Transactional
-    public boolean purchase(User user, BigDecimal totalCost) throws AppBalanceException {
+    public boolean purchase(User user, BigDecimal totalCost) {
         if (user.getBalance().compareTo(totalCost) >= 0) {
             user.setBalance(user.getBalance().subtract(totalCost));
-            appBalanceService.updateAppBalance(totalCost);
             userRepository.save(user);
             return true;
         } else {

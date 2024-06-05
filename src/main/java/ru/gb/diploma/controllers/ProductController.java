@@ -30,9 +30,6 @@ public class ProductController {
             System.out.println(e.getMessage());
         }
 
-
-
-
         return "product_card";
     }
 }

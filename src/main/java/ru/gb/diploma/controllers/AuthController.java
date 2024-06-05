@@ -36,7 +36,7 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.saveUser(user);
+        userRepository.registerUser(user);
         cartService.createCart(user);
         return "redirect:/login";
     }

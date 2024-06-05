@@ -22,4 +22,8 @@ public class ProductService {
         return productRepo.findByName(name).orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
 
+    public Product saveProduct(Product product){
+        return productRepo.save(product);
+    }
+
 }

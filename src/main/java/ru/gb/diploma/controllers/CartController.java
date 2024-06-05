@@ -2,14 +2,12 @@ package ru.gb.diploma.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.gb.diploma.model.Cart;
 import ru.gb.diploma.model.DTO.cart.CartDTO;
 import ru.gb.diploma.model.User;
 import ru.gb.diploma.model.utils.exceptions.CartNotFoundException;

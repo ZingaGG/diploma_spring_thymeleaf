@@ -40,6 +40,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public String profilePage(@AuthenticationPrincipal User user, Model model){
+        System.out.println(user.getRole());
         model.addAttribute("user", user);
         return "profile";
     }

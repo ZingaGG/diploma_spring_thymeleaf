@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.diploma.model.User;
+import ru.gb.diploma.model.utils.Role;
 import ru.gb.diploma.repositories.iUserRepository;
 
 import java.math.BigDecimal;
@@ -26,6 +27,16 @@ public class UserService implements UserDetailsService {
      * @return user
      */
     public User saveUser(User user){
+        return userRepository.save(user);
+    }
+
+    /**
+     * Register user into Database
+     * @param user
+     * @return user
+     */
+    public User registerUser(User user){
+        user.setRole(Role.USER);
         return userRepository.save(user);
     }
 
@@ -53,12 +64,6 @@ public class UserService implements UserDetailsService {
      * @param <<code>String</code> email
      * @return <code>User</code> user
      */
-    public User getUserByEmail(String email){
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-    // Оверрайд метода из UserDetailsService для корректной работы авторизации
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)

@@ -31,7 +31,7 @@
           <button type="submit" class="btn btn-outline-secondary">+</button>
         </form>
       </td>
-      <td th:text="${item.price}"></td>
+<!--      <td th:text="${#numbers.formatDecimal(item.totalPrice, 2, 'POINT')}"></td>-->
       <td>
         <form th:action="@{/cart/remove}" method="post" style="display: inline;">
           <input type="hidden" name="itemId" th:value="${item.id}" />
@@ -41,8 +41,11 @@
     </tr>
     </tbody>
   </table>
-  <form th:action="@{/home/profile/purchase}" method="post">
-    <input type="hidden" name="totalCost" th:value="${cart.totalCost}" />
+  <div class="text-right">
+<!--    <h4>Total: <span th:text="${#numbers.formatDecimal(totalCost, 2, 'POINT')}">0.00</span></h4>-->
+  </div>
+  <form th:action="@{/cart/purchase}" method="post">
+<!--    <input type="hidden" name="totalCost" th:value="${#numbers.formatDecimal(totalCost, 2, 'POINT')}" />-->
     <button type="submit" class="btn btn-primary">Purchase</button>
   </form>
   <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>

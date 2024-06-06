@@ -11,6 +11,7 @@ import ru.gb.diploma.model.utils.exceptions.CartNotFoundException;
 import ru.gb.diploma.model.utils.exceptions.ProductNotFoundException;
 import ru.gb.diploma.repositories.iCartRepository;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -174,6 +175,28 @@ public class CartService {
             } else {
                 removeItemFromCart(user, cartItem.getId());
             }
+        }
+    }
+
+    @Transactional
+    public void purchase(double totalCost, User user) throws CartNotFoundException {
+        // 0 - balance equals total cost, 1 - balance bigger than total cost
+        if (user.getBalance().compareTo(BigDecimal.valueOf(totalCost)) >= 0) {
+            Cart cart = user.getCart();
+            for (CartItem cartItem : cart.getCartItems()) {
+                Product product = cartItem.getProduct();
+                int remainingQuantity = product.getQuantity() - cartItem.getQuantity();
+                if (remainingQuantity < 0) {
+                    throw new RuntimeException("Insufficient stock for product: " + product.getName());
+                }
+                product.setQuantity(remainingQuantity);
+                productService.saveProduct(product);
+            }
+            user.setBalance(user.getBalance().subtract(BigDecimal.valueOf(totalCost)));
+            clearCart(user);
+            userService.saveUser(user);
+        } else {
+            throw new RuntimeException("Insufficient balance");
         }
     }
 }

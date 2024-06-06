@@ -12,6 +12,7 @@ import ru.gb.diploma.model.DTO.cart.CartDTO;
 import ru.gb.diploma.model.User;
 import ru.gb.diploma.model.utils.exceptions.CartNotFoundException;
 import ru.gb.diploma.model.utils.exceptions.ProductNotFoundException;
+import ru.gb.diploma.model.utils.mappers.CartItemMapper;
 import ru.gb.diploma.model.utils.mappers.CartMapper;
 import ru.gb.diploma.services.CartItemService;
 import ru.gb.diploma.services.CartService;
@@ -22,20 +23,26 @@ import ru.gb.diploma.services.CartService;
 public class CartController {
 
     private final CartService cartService;
-
+    private final CartItemMapper cartItemMapper;
     private final CartItemService cartItemService;
     private final CartMapper cartMapper;
 
     @GetMapping
     public String viewCart(@AuthenticationPrincipal User user, Model model) {
-        CartDTO cart = null;
         try {
-            cart = cartMapper.toDTO(cartService.getCart(user));
+            CartDTO cart = cartMapper.toDTO(cartService.getCart(user));
+            double totalCost = cart.getCartItems().stream()
+                    .map(cartItemMapper::cartItemDTOToCartItem)
+                    .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
+                    .sum();
+            System.out.println(cart.getCartItems().stream().findAny().get().getTotalPrice());
+
+            model.addAttribute("cart", cart);
+            model.addAttribute("totalCost", totalCost);
         } catch (CartNotFoundException e) {
             System.out.println(e.getMessage());
         }
 
-        model.addAttribute("cart", cart);
         return "cart";
     }
 
@@ -100,5 +107,18 @@ public class CartController {
             System.out.println(e.getMessage());
         }
         return "redirect:/cart";
+    }
+
+    @PostMapping("/purchase")
+    public String purchase(@RequestParam double totalCost,
+                           @AuthenticationPrincipal User user,
+                           Model model) {
+        try {
+            cartService.purchase(totalCost, user);
+            return "thankPage";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "cart";
+        }
     }
 }

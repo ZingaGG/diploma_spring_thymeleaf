@@ -27,6 +27,16 @@
           <p>Product Type: <span th:text="${product.productType}">GAME</span></p>
         </div>
       </a>
+      <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+        <form th:action="@{/admin/delete-product/{name}(name=${product.name})}" method="post">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+      <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+        <form th:action="@{/admin/update-product/{name}(name=${product.name})}" method="get">
+          <button type="submit" class="btn btn-warning">Update</button>
+        </form>
+      </div>
     </div>
   </div>
 </div>

@@ -7,6 +7,8 @@ import ru.gb.diploma.model.Product;
 import java.util.Optional;
 
 @Repository
-public interface iProductRepository extends JpaRepository<Product, Long> {
+public interface  iProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByName(String name);
+
+    void deleteProductByName(String name);
 }

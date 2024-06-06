@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Update Product</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<div class="container">
+  <h1>Update Product</h1>
+  <form th:action="@{/admin/update-product}" th:object="${product}" method="post">
+    <div class="form-group">
+      <label for="name">Current Product Name:</label>
+      <input type="text" id="name" name="currentName" class="form-control" th:value="${product.name}" readonly />
+      <label for="newName">New Product Name:</label>
+      <input type="text" id="newName" th:field="*{name}" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="price">Current Product Price:</label>
+      <input type="text" id="price" name="currentPrice" class="form-control" th:value="${product.price}" readonly />
+      <label for="newPrice">New Product Price:</label>
+      <input type="number" id="newPrice" th:field="*{price}" step="0.01" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="quantity">Current Product Quantity:</label>
+      <input type="text" id="quantity" name="currentQuantity" class="form-control" th:value="${product.quantity}" readonly />
+      <label for="newQuantity">New Product Quantity:</label>
+      <input type="number" id="newQuantity" th:field="*{quantity}" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="productType">Product Type:</label>
+      <select id="productType" th:field="*{productType}" class="form-control">
+        <option th:each="type : ${T(ru.gb.diploma.model.utils.ProductType).values()}"
+                th:value="${type}" th:text="${type}"></option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Product</button>
+  </form>
+</div>
+</body>
+</html>

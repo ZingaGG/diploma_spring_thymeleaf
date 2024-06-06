@@ -127,6 +127,8 @@ public class CartController {
         return "redirect:/cart";
     }
 
+    // Метод покупки с выдачей ошибки на фронт
+
     @PostMapping("/purchase")
     public String purchase(@RequestParam double totalCost,
                            @AuthenticationPrincipal User user,
@@ -135,8 +137,26 @@ public class CartController {
             cartService.purchase(totalCost, user);
             return "thankPage";
         } catch (Exception e) {
+            Cart cartForSort = null;
+            try {
+                cartForSort = cartService.getCart(user);
+            } catch (CartNotFoundException ex) {
+                cartService.createCart(user);
+                return "redirect:/cart";
+            }
+            CartDTO cart = cartMapper.toDTO(cartForSort);
+            model.addAttribute("cart", cart);
+            model.addAttribute("totalCost", totalCost);
+            model.addAttribute("error", "Insufficient funds");
             System.out.println(e.getMessage());
-            return "redirect:/cart";
+            return "cart";
         }
     }
+
+    // Страница после успешной покупки
+    @GetMapping("/thankPage")
+    public String thankPage(){
+        return "thankPage";
+    }
+
 }

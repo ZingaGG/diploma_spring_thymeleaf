@@ -21,7 +21,6 @@ import java.util.List;
 public class UserService implements UserDetailsService {
 
     private final iUserRepository userRepository;
-    private final AppBalanceService appBalanceService;
 
     /**
      * Saves the user into Database
@@ -105,20 +104,4 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    /**
-     * Метод обновления баланса после покупки
-     * @param user
-     * @param totalCost
-     * @return
-     */
-    @Transactional
-    public boolean purchase(User user, BigDecimal totalCost) throws AppBalanceException {
-        if (user.getBalance().compareTo(totalCost) >= 0) {
-            user.setBalance(user.getBalance().subtract(totalCost));
-            userRepository.save(user);
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

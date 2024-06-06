@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,31 +73,6 @@ public class UserController {
     public String addFunds(@AuthenticationPrincipal User user, @RequestParam BigDecimal amount) {
         userService.addFunds(user, amount);
         return "redirect:/home/profile";
-    }
-
-    // Обработка покупки
-
-    @PostMapping("/profile/purchase")
-    public String purchase(@AuthenticationPrincipal User user,
-                           @RequestParam BigDecimal totalCost,
-                           Model model) {
-        boolean success = false;
-        try {
-            success = userService.purchase(user, totalCost);
-        } catch (AppBalanceException e) {
-            throw new RuntimeException(e);
-        }
-        if (success) {
-            return "redirect:/home/thankPage";
-        } else {
-            model.addAttribute("error", "Insufficient funds");
-            return "cart";
-        }
-    }
-
-    @GetMapping("/thankPage")
-    public String thankPage(){
-        return "thankPage";
     }
 
 }

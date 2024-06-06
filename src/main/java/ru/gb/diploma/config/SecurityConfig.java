@@ -12,9 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.gb.diploma.repositories.iAppBalanceRepository;
 import ru.gb.diploma.repositories.iUserRepository;
-import ru.gb.diploma.services.AppBalanceService;
 import ru.gb.diploma.services.UserService;
 
 @Configuration
@@ -23,11 +21,10 @@ import ru.gb.diploma.services.UserService;
 public class SecurityConfig {
 
     private final iUserRepository repository;
-    private final AppBalanceService appBalanceService;
 
     @Bean
     public UserDetailsService userDetailsService(){
-        return new UserService(repository, appBalanceService);
+        return new UserService(repository);
     }
 
 

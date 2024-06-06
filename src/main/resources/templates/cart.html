@@ -11,6 +11,7 @@
 <div th:replace="~{header :: header}"></div>
 <div class="container">
   <h1>Your Cart</h1>
+  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
   <table class="table">
     <thead>
     <tr>
@@ -51,7 +52,6 @@
     <input type="hidden" name="totalCost" th:value="${totalCost}" />
     <button type="submit" class="btn btn-primary">Purchase</button>
   </form>
-  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
   <form th:action="@{/cart/clear}" method="post">
     <button type="submit" class="btn btn-warning">Clear Cart</button>
   </form>

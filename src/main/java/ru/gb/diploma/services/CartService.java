@@ -7,6 +7,7 @@ import ru.gb.diploma.model.Cart;
 import ru.gb.diploma.model.CartItem;
 import ru.gb.diploma.model.Product;
 import ru.gb.diploma.model.User;
+import ru.gb.diploma.model.utils.exceptions.AppBalanceException;
 import ru.gb.diploma.model.utils.exceptions.CartNotFoundException;
 import ru.gb.diploma.model.utils.exceptions.ProductNotFoundException;
 import ru.gb.diploma.repositories.iCartRepository;
@@ -180,8 +181,15 @@ public class CartService {
         }
     }
 
+    /**
+     * Метод обновления баланса, изменения количества товара после покупки
+     * @param user
+     * @param totalCost
+     * @return
+     */
+
     @Transactional
-    public void purchase(double totalCost, User user) throws CartNotFoundException {
+    public void purchase(double totalCost, User user) throws CartNotFoundException, AppBalanceException {
         // Загружаем пользователя заново, чтобы гарантировать активную сессию
         User persistentUser = userService.getUserById(user.getId());
 
@@ -195,7 +203,7 @@ public class CartService {
                 Product product = cartItem.getProduct();
                 int remainingQuantity = product.getQuantity() - cartItem.getQuantity();
                 if (remainingQuantity < 0) {
-                    throw new RuntimeException("Insufficient stock for product: " + product.getName());
+                    throw new AppBalanceException("Insufficient stock for product: " + product.getName());
                 }
                 product.setQuantity(remainingQuantity);
                 productService.saveProduct(product);
@@ -204,7 +212,7 @@ public class CartService {
             clearCart(persistentUser);
             userService.saveUser(persistentUser);
         } else {
-            throw new RuntimeException("Insufficient balance");
+            throw new AppBalanceException("Insufficient balance");
         }
     }
 }

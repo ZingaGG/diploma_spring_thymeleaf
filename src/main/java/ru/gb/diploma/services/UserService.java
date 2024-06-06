@@ -42,7 +42,7 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Get list of users from Databes
+     * Get list of users from Database
      * @return List<User>
      */
     public List<User> getListUsers(){
@@ -56,8 +56,9 @@ public class UserService implements UserDetailsService {
      * @return user
      */
     public User getUserById(Long id){
-        return userRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return user;
     }
 
     /**

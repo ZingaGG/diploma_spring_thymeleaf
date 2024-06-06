@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.gb.diploma.model.DTO.product.ProductDTO;
+import ru.gb.diploma.model.DTO.user.UserDTO;
 import ru.gb.diploma.model.User;
 import ru.gb.diploma.model.utils.exceptions.AppBalanceException;
 import ru.gb.diploma.model.utils.mappers.ProductMapper;
+import ru.gb.diploma.model.utils.mappers.UserMapper;
 import ru.gb.diploma.services.ProductService;
 import ru.gb.diploma.services.UserService;
 
@@ -26,6 +28,7 @@ public class UserController {
     private final UserService userService;
     private final ProductService productService;
     private final ProductMapper productMapper;
+    private final UserMapper userMapper;
 
 
     // Отображает главную страницу с товарами и обеспечивает доступ к работе с профилем и балансом
@@ -41,8 +44,10 @@ public class UserController {
 
     @GetMapping("/profile")
     public String profilePage(@AuthenticationPrincipal User user, Model model){
-        System.out.println(user.getRole());
-        model.addAttribute("user", user);
+
+        UserDTO userDTO = userMapper.toDTO(userService.getUserById(user.getId()));
+
+        model.addAttribute("user", userDTO);
         return "profile";
     }
 

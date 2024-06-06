@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.gb.diploma.model.Cart;
+import ru.gb.diploma.model.CartItem;
 import ru.gb.diploma.model.DTO.cart.CartDTO;
 import ru.gb.diploma.model.User;
 import ru.gb.diploma.model.utils.exceptions.CartNotFoundException;
@@ -16,6 +18,11 @@ import ru.gb.diploma.model.utils.mappers.CartItemMapper;
 import ru.gb.diploma.model.utils.mappers.CartMapper;
 import ru.gb.diploma.services.CartItemService;
 import ru.gb.diploma.services.CartService;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/cart")
@@ -30,12 +37,23 @@ public class CartController {
     @GetMapping
     public String viewCart(@AuthenticationPrincipal User user, Model model) {
         try {
-            CartDTO cart = cartMapper.toDTO(cartService.getCart(user));
+
+            Cart cartForSort = cartService.getCart(user);
+
+            // Сортировка, чтобы продукты не прыгали в корзине
+            Set<CartItem> sortedCartItems = cartForSort.getCartItems().stream()
+                    .sorted((item1, item2) -> item1.getProduct().getName().compareToIgnoreCase(item2.getProduct().getName()))
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+
+            cartForSort.setCartItems(sortedCartItems);
+
+            CartDTO cart = cartMapper.toDTO(cartForSort);
+
+
             double totalCost = cart.getCartItems().stream()
                     .map(cartItemMapper::cartItemDTOToCartItem)
                     .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
                     .sum();
-            System.out.println(cart.getCartItems().stream().findAny().get().getTotalPrice());
 
             model.addAttribute("cart", cart);
             model.addAttribute("totalCost", totalCost);
@@ -117,8 +135,8 @@ public class CartController {
             cartService.purchase(totalCost, user);
             return "thankPage";
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            return "cart";
+            System.out.println(e.getMessage());
+            return "redirect:/cart";
         }
     }
 }

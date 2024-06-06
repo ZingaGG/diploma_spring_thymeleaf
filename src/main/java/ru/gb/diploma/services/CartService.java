@@ -32,6 +32,8 @@ public class CartService {
      * @return
      * @throws CartNotFoundException
      */
+
+    @Transactional
     public Cart getCart(User user) throws CartNotFoundException {
         return cartRepository.findByUser(user).orElseThrow(
                 () -> new CartNotFoundException("Cart no found"));
@@ -180,9 +182,15 @@ public class CartService {
 
     @Transactional
     public void purchase(double totalCost, User user) throws CartNotFoundException {
-        // 0 - balance equals total cost, 1 - balance bigger than total cost
-        if (user.getBalance().compareTo(BigDecimal.valueOf(totalCost)) >= 0) {
-            Cart cart = user.getCart();
+        // Загружаем пользователя заново, чтобы гарантировать активную сессию
+        User persistentUser = userService.getUserById(user.getId());
+
+        // Инициализируем ленивую коллекцию корзины
+        Cart cart = persistentUser.getCart();
+        cart.getCartItems().size();
+
+        // Проверяем баланс пользователя
+        if (persistentUser.getBalance().compareTo(BigDecimal.valueOf(totalCost)) >= 0) {
             for (CartItem cartItem : cart.getCartItems()) {
                 Product product = cartItem.getProduct();
                 int remainingQuantity = product.getQuantity() - cartItem.getQuantity();
@@ -192,9 +200,9 @@ public class CartService {
                 product.setQuantity(remainingQuantity);
                 productService.saveProduct(product);
             }
-            user.setBalance(user.getBalance().subtract(BigDecimal.valueOf(totalCost)));
-            clearCart(user);
-            userService.saveUser(user);
+            persistentUser.setBalance(persistentUser.getBalance().subtract(BigDecimal.valueOf(totalCost)));
+            clearCart(persistentUser);
+            userService.saveUser(persistentUser);
         } else {
             throw new RuntimeException("Insufficient balance");
         }

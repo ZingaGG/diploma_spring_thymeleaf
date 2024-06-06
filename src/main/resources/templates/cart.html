@@ -3,6 +3,9 @@
 <head>
   <title>Cart</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div th:replace="~{header :: header}"></div>
@@ -21,9 +24,9 @@
     <tr th:each="item : ${cart.cartItems}">
       <td th:text="${item.productName}"></td>
       <td>
-        <form th:action="@{/cart/decrementQuantity}" method="post" style="display: inline;">
+        <form th:action="@{/cart/decrementQuantity}" method="post" style="display: inline;" class="decrement-form">
           <input type="hidden" name="productName" th:value="${item.productName}" />
-          <button type="submit" class="btn btn-outline-secondary">-</button>
+          <button type="button" class="btn btn-outline-secondary decrement-button" th:data-quantity="${item.quantity}">-</button>
         </form>
         <span th:text="${item.quantity}"></span>
         <form th:action="@{/cart/incrementQuantity}" method="post" style="display: inline;">
@@ -31,7 +34,7 @@
           <button type="submit" class="btn btn-outline-secondary">+</button>
         </form>
       </td>
-<!--      <td th:text="${#numbers.formatDecimal(item.totalPrice, 2, 'POINT')}"></td>-->
+      <td th:text="${#numbers.formatDecimal(item.totalPrice, 2, 2)}"></td>
       <td>
         <form th:action="@{/cart/remove}" method="post" style="display: inline;">
           <input type="hidden" name="itemId" th:value="${item.id}" />
@@ -42,10 +45,10 @@
     </tbody>
   </table>
   <div class="text-right">
-<!--    <h4>Total: <span th:text="${#numbers.formatDecimal(totalCost, 2, 'POINT')}">0.00</span></h4>-->
+    <h4>Total: <span th:text="${#numbers.formatDecimal(totalCost, 2, 2)}">0.00</span></h4>
   </div>
   <form th:action="@{/cart/purchase}" method="post">
-<!--    <input type="hidden" name="totalCost" th:value="${#numbers.formatDecimal(totalCost, 2, 'POINT')}" />-->
+    <input type="hidden" name="totalCost" th:value="${totalCost}" />
     <button type="submit" class="btn btn-primary">Purchase</button>
   </form>
   <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
@@ -54,5 +57,47 @@
   </form>
   <a href="/home" class="btn btn-secondary">Continue Shopping</a>
 </div>
+
+<!-- Модальное окно -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Delete product from cart?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" id="confirmDelete">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    let confirmDeleteButton = document.getElementById('confirmDelete');
+    let formToSubmit;
+
+    document.querySelectorAll('.decrement-button').forEach(button => {
+      button.addEventListener('click', function() {
+        let quantity = parseInt(this.getAttribute('data-quantity'));
+        if (quantity > 1) {
+          this.closest('form').submit();
+        } else {
+          formToSubmit = this.closest('form');
+          $('#confirmationModal').modal('show');
+        }
+      });
+    });
+
+    confirmDeleteButton.addEventListener('click', function() {
+      formToSubmit.submit();
+      $('#confirmationModal').modal('hide');
+    });
+  });
+</script>
 </body>
 </html>

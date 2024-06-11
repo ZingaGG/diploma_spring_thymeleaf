@@ -20,7 +20,6 @@ import ru.gb.diploma.services.CartItemService;
 import ru.gb.diploma.services.CartService;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -147,8 +146,7 @@ public class CartController {
             CartDTO cart = cartMapper.toDTO(cartForSort);
             model.addAttribute("cart", cart);
             model.addAttribute("totalCost", totalCost);
-            model.addAttribute("error", "Insufficient funds");
-            System.out.println(e.getMessage());
+            model.addAttribute("error", e.getMessage());
             return "cart";
         }
     }

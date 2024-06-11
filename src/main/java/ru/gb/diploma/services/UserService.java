@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.diploma.model.User;
 import ru.gb.diploma.model.utils.Role;
-import ru.gb.diploma.model.utils.exceptions.AppBalanceException;
 import ru.gb.diploma.repositories.iUserRepository;
 
 import java.math.BigDecimal;

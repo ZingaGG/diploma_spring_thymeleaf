@@ -8,9 +8,7 @@ import ru.gb.diploma.model.DTO.product.ProductDTO;
 import ru.gb.diploma.model.Product;
 import ru.gb.diploma.model.utils.exceptions.ProductNotFoundException;
 import ru.gb.diploma.model.utils.mappers.ProductMapper;
-import ru.gb.diploma.model.utils.mappers.UserMapper;
 import ru.gb.diploma.services.ProductService;
-import ru.gb.diploma.services.UserService;
 
 @Controller
 @RequestMapping("/admin")

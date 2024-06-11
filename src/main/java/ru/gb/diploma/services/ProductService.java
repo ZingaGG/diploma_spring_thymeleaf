@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.diploma.model.Product;
-import ru.gb.diploma.model.User;
 import ru.gb.diploma.model.utils.exceptions.ProductNotFoundException;
 import ru.gb.diploma.repositories.iProductRepository;
 
-import java.awt.color.ProfileDataException;
 import java.util.List;
 
 @Service

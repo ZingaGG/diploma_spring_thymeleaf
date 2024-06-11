@@ -2,7 +2,6 @@ package ru.gb.diploma.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
